@@ -4,6 +4,7 @@ import { Urbanist, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
+import QueryProvider from "@/context/query-provider";
 import { ThemeProvider } from "@/context/theme-provider";
 
 const urbanist = Urbanist({ subsets: ["latin"] });
@@ -28,15 +29,17 @@ export default function RootLayout({
       <body
         className={cn("bg-background", open_sans.variable, urbanist.className)}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );
