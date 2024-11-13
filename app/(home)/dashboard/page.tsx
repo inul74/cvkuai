@@ -22,7 +22,7 @@ const Page = () => {
 
         <div className="w-full pt-11">
           <h5 className="text-xl font-semibold dark:text-inherit mb-3">
-            Semua Resume
+            Daftar Resume
           </h5>
           <div className="flex flex-wrap w-full gap-5">
             <AddResume />
