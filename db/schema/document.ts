@@ -1,3 +1,6 @@
+import { z } from "zod";
+import { relations } from "drizzle-orm";
+import { createInsertSchema } from "drizzle-zod";
 import {
   integer,
   pgEnum,
@@ -7,6 +10,11 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+
+import { skillsTable, skillsTableSchema } from "./skills";
+import { educationTable, educationTableSchema } from "./education";
+import { experienceTable, experienceTableSchema } from "./experience";
+import { personalInfoTable, personalInfoTableSchema } from "./personal-info";
 
 export const statusEnum = pgEnum("status", ["archived", "private", "public"]);
 
@@ -27,3 +35,43 @@ export const documentTable = pgTable("document", {
   createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
 });
+
+export const documentRelations = relations(documentTable, ({ one, many }) => {
+  return {
+    personalInfo: one(personalInfoTable),
+    experiences: many(experienceTable),
+    educations: many(educationTable),
+    skills: many(skillsTable),
+  };
+});
+
+export const createDocumentTableSchema = createInsertSchema(documentTable, {
+  title: (schema) => schema.title.min(1),
+  themeColor: (schema) => schema.themeColor.optional(),
+  thumbnail: (schema) => schema.thumbnail.optional(),
+  currentPosition: (schema) => schema.currentPosition.optional(),
+}).pick({
+  title: true,
+  status: true,
+  summary: true,
+  themeColor: true,
+  thumbnail: true,
+  currentPosition: true,
+});
+
+export const updateCombinedSchema = z.object({
+  title: createDocumentTableSchema.shape.title.optional(),
+  status: createDocumentTableSchema.shape.status.optional(),
+  thumbnail: createDocumentTableSchema.shape.thumbnail.optional(),
+  summary: createDocumentTableSchema.shape.summary.optional(),
+  themeColor: createDocumentTableSchema.shape.themeColor.optional(),
+  currentPosition: createDocumentTableSchema.shape.currentPosition.optional(),
+  personalInfo: personalInfoTableSchema.optional(),
+  education: z.array(educationTableSchema).optional(),
+  experience: z.array(experienceTableSchema).optional(),
+  skills: z.array(skillsTableSchema).optional(),
+});
+
+export type DocumentSchema = z.infer<typeof createDocumentTableSchema>;
+
+export type UpdateDocumentSchema = z.infer<typeof updateCombinedSchema>;
