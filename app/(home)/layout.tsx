@@ -2,6 +2,8 @@ import React from "react";
 import { redirect } from "next/navigation";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
+import Header from "./_components/common/Header";
+
 const MainLayout = async ({
   children,
 }: Readonly<{
@@ -14,7 +16,15 @@ const MainLayout = async ({
     redirect("/");
   }
 
-  return <div>{children}</div>;
+  return (
+    <div
+      className="w-full h-auto min-h-screen
+     !bg-[#f8f8f8] dark:!bg-background"
+    >
+      <Header />
+      <div>{children}</div>
+    </div>
+  );
 };
 
 export default MainLayout;
