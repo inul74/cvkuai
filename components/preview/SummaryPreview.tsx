@@ -16,7 +16,7 @@ const SummaryPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
       ) : (
         <p className="text-[13px] !leading-4">
           {resumeInfo?.summary ||
-            "Enter a brief description of your profession baground."}
+            "Masukkan deskripsi singkat tentang profesi Anda."}
         </p>
       )}
     </div>

@@ -103,7 +103,7 @@ const PersonalInfoForm = (props: { handleNext: () => void }) => {
     <div>
       <div className="w-full">
         <h2 className="font-bold text-lg">Personal Information</h2>
-        <p className="text-sm">Get Started with the personal information</p>
+        <p className="text-sm">Mulailah dengan informasi pribadi</p>
       </div>
       <div>
         <form onSubmit={handleSubmit}>
