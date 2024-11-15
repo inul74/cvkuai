@@ -1,5 +1,5 @@
 import { Loader, Plus, X } from "lucide-react";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { toast } from "@/hooks/use-toast";
 import { generateThumbnail } from "@/lib/helper";
@@ -30,7 +30,7 @@ const ExperienceForm = (props: { handleNext: () => void }) => {
 
   const { mutateAsync, isPending } = useUpdateDocument();
 
-  const [experienceList, setExperienceList] = React.useState(() => {
+  const [experienceList, setExperienceList] = useState(() => {
     return resumeInfo?.experiences?.length
       ? resumeInfo.experiences
       : [initialState];
