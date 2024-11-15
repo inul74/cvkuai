@@ -25,7 +25,7 @@ const ResumeItem: FC<PropType> = ({
 
   const docDate = useMemo(() => {
     if (!updatedAt) return null;
-    const formattedDate = format(updatedAt, "MMM dd, yyyy");
+    const formattedDate = format(updatedAt, "dd MMM, yyyy");
     return formattedDate;
   }, [updatedAt]);
 
