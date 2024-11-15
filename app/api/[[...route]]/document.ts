@@ -1,11 +1,8 @@
-import { z } from "zod";
 import { Hono } from "hono";
-import { and, desc, eq, ne } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
-
-import { db } from "@/db";
-import { getAuthUser } from "@/lib/kinde";
-import { generateDocUUID } from "@/lib/helper";
+import { and, desc, eq, ne } from "drizzle-orm";
+import { z } from "zod";
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import {
   createDocumentTableSchema,
   DocumentSchema,
@@ -13,6 +10,9 @@ import {
   updateCombinedSchema,
   UpdateDocumentSchema,
 } from "@/db/schema/document";
+import { getAuthUser } from "@/lib/kinde";
+import { generateDocUUID } from "@/lib/helper";
+import { db } from "@/db";
 import {
   educationTable,
   experienceTable,
@@ -271,6 +271,72 @@ const documentRoute = new Hono()
       }
     }
   )
+  .patch(
+    "/restore/archive",
+    zValidator(
+      "json",
+      z.object({
+        documentId: z.string(),
+        status: z.string(),
+      })
+    ),
+    getAuthUser,
+    async (c) => {
+      try {
+        const user = c.get("user");
+        const userId = user.id;
+
+        const { documentId, status } = c.req.valid("json");
+
+        if (!documentId) {
+          return c.json({ message: "DocumentId must provided" }, 400);
+        }
+
+        if (status !== "archived") {
+          return c.json(
+            { message: "Status must be archived before restore" },
+            400
+          );
+        }
+
+        const [documentData] = await db
+          .update(documentTable)
+          .set({
+            status: "private",
+          })
+          .where(
+            and(
+              eq(documentTable.userId, userId),
+              eq(documentTable.documentId, documentId),
+              eq(documentTable.status, "archived")
+            )
+          )
+          .returning();
+
+        if (!documentData) {
+          return c.json({ message: "Document not found" }, 404);
+        }
+
+        return c.json(
+          {
+            success: "ok",
+            message: "Updated successfully",
+            data: documentData,
+          },
+          { status: 200 }
+        );
+      } catch (error) {
+        return c.json(
+          {
+            success: false,
+            message: "Failed to retore document",
+            error: error,
+          },
+          500
+        );
+      }
+    }
+  )
   .get("all", getAuthUser, async (c) => {
     try {
       const user = c.get("user");
@@ -376,7 +442,6 @@ const documentRoute = new Hono()
             401
           );
         }
-
         return c.json({
           success: true,
           data: documentData,

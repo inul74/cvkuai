@@ -1,11 +1,10 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { InferRequestType, InferResponseType } from "hono";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-import { api } from "@/lib/hono-rpc";
 import { toast } from "@/hooks/use-toast";
+import { api } from "@/lib/hono-rpc";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { InferRequestType, InferResponseType } from "hono";
+import { useParams } from "next/navigation";
 
 type ResponseType = InferResponseType<
   (typeof api.document.update)[":documentId"]["$patch"]

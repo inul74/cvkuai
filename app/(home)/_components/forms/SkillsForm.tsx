@@ -4,8 +4,8 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { toast } from "@/hooks/use-toast";
 import { generateThumbnail } from "@/lib/helper";
-import useUpdateDocument from "@/features/document/use-update-document";
 import { useResumeContext } from "@/context/resume-info-provider";
+import useUpdateDocument from "@/features/document/use-update-document";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";

@@ -12,7 +12,8 @@ const Page = () => {
           <div>
             <h1 className="text-2xl font-bold">Resume (curriculum vitae)</h1>
             <p className="text-base dark:text-inherit">
-              Buat resume khusus Anda sendiri dengan AI & Berlangganan saluran
+              Buat resume khusus Anda sendiri dengan Kecerdasan Buatan (AI -
+              Artificial Intelligence)
             </p>
           </div>
           <div className="shrink-0 flex items-center gap-3">
